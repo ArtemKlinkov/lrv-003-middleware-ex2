@@ -16,3 +16,17 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Route::group(['middleware' => 'auth'], function () {
+    Route::group([
+        'middleware' => 'auth_info',
+    ], function () {
+        Route::get('/', function (\Illuminate\Http\Request  $request) {
+            return view('auth_info', ['user'=>$request->user]);
+        });
+    });
+});
